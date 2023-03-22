@@ -1,4 +1,4 @@
-import  React, {  useEffect, useState } from 'react';
+import  React, {  useEffect, useState, useContext } from 'react';
 import { ethers } from "ethers";
 // const ethers = require("ethers")
 import abi from '../../contracts/contracts//BuyMeCoffee.sol/BuyMeACoffee.json'
@@ -12,17 +12,18 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';  
 import Input from '@mui/material/Input';
+import { WalletContext } from '../../context/WalletContext';
 function BuyCoffee() {
      // Contract Address & ABI
     const contractAddress = "0x7ffe51Db09B715c010E16bE2bfe47A45d34d44dc";
     const contractABI = abi.abi;
 
     // Component state
-    const [currentAccount, setCurrentAccount] = useState("");
+    // const [currentAccount, setCurrentAccount] = useState("");
     const [name, setName] = useState("");
     const [message, setMessage] = useState("");
     const [memos, setMemos] = useState([]);
-
+    const {handleAuth,isWalletConnected,formattedAccount,currentAccount}=useContext(WalletContext)
     const onNameChange = (event) => {
         setName(event.target.value);
     }
@@ -30,101 +31,101 @@ function BuyCoffee() {
     const onMessageChange = (event) => {
         setMessage(event.target.value);
     }
-    const isWalletConnected = async () => {
-        try {
-            const { ethereum } = window;
+    // const isWalletConnected = async () => {
+    //     try {
+    //         const { ethereum } = window;
 
-            const accounts = await ethereum.request({method: 'eth_accounts'})
-            //console.log("accounts: ", accounts);
-            //console.log('start check')
+    //         const accounts = await ethereum.request({method: 'eth_accounts'})
+    //         //console.log("accounts: ", accounts);
+    //         //console.log('start check')
 
-            if (accounts.length > 0) {
-                const account = accounts[0];
-                //console.log("wallet is connected! " + account);
-                let n = ethereum.chainId 
-                //console.log("chainId: ", n)
-                if(n != "0xaa36a7"){
-                  try {
+    //         if (accounts.length > 0) {
+    //             const account = accounts[0];
+    //             //console.log("wallet is connected! " + account);
+    //             let n = ethereum.chainId 
+    //             //console.log("chainId: ", n)
+    //             if(n != "0xaa36a7"){
+    //               try {
       
-                    await ethereum.request({
-                      method: 'wallet_switchEthereumChain',
-                      params: [{ chainId: "0xaa36a7"}],
-                    });
-                    console.log("You have switched to the right network")
-                    setCurrentAccount(account);
-                    getMemos();
+    //                 await ethereum.request({
+    //                   method: 'wallet_switchEthereumChain',
+    //                   params: [{ chainId: "0xaa36a7"}],
+    //                 });
+    //                 console.log("You have switched to the right network")
+    //                 setCurrentAccount(account);
+    //                 getMemos();
                     
-                  } catch (switchError) {
+    //               } catch (switchError) {
                     
-                    // The network has not been added to MetaMask
-                    if (switchError.code === 4902) {
-                     console.log("Please add the Sepolia network to MetaMask")
-                    }
-                    console.log("Cannot switch to the network")
+    //                 // The network has not been added to MetaMask
+    //                 if (switchError.code === 4902) {
+    //                  console.log("Please add the Sepolia network to MetaMask")
+    //                 }
+    //                 console.log("Cannot switch to the network")
                     
-                  }
-                }
-                else{
-                  setCurrentAccount(account);
-                  getMemos();
-                }
-                // setCurrentAccount(account)
-                // getMemos();
-            } else {
-                console.log("make sure MetaMask is connected");
-            }
-        } catch (error) {
-            console.log("error: ", error);
-        }
-    }
-    const connectWallet = async () => {
-        try {
-          const {ethereum} = window;
+    //               }
+    //             }
+    //             else{
+    //               setCurrentAccount(account);
+    //               getMemos();
+    //             }
+    //             // setCurrentAccount(account)
+    //             // getMemos();
+    //         } else {
+    //             console.log("make sure MetaMask is connected");
+    //         }
+    //     } catch (error) {
+    //         console.log("error: ", error);
+    //     }
+    // }
+    // const connectWallet = async () => {
+    //     try {
+    //       const {ethereum} = window;
     
-          if (!ethereum) {
-            console.log("please install MetaMask");
-          }
-          else{
-            const accounts = await ethereum.request({
-              method: 'eth_requestAccounts'
-            });
-            let n = ethereum.chainId 
-            //console.log("chainId: ", n)
+    //       if (!ethereum) {
+    //         console.log("please install MetaMask");
+    //       }
+    //       else{
+    //         const accounts = await ethereum.request({
+    //           method: 'eth_requestAccounts'
+    //         });
+    //         let n = ethereum.chainId 
+    //         //console.log("chainId: ", n)
             
-            if(n != "0xaa36a7"){
-              try {
+    //         if(n != "0xaa36a7"){
+    //           try {
   
-                await ethereum.request({
-                  method: 'wallet_switchEthereumChain',
-                  params: [{ chainId: "0xaa36a7"}],
-                });
-                console.log("You have switched to the right network")
-                setCurrentAccount(accounts[0]);
-                getMemos();
+    //             await ethereum.request({
+    //               method: 'wallet_switchEthereumChain',
+    //               params: [{ chainId: "0xaa36a7"}],
+    //             });
+    //             console.log("You have switched to the right network")
+    //             setCurrentAccount(accounts[0]);
+    //             getMemos();
                 
-              } catch (switchError) {
+    //           } catch (switchError) {
                 
-                // The network has not been added to MetaMask
-                if (switchError.code === 4902) {
-                 console.log("Please add the Sepolia network to MetaMask")
-                }
-                console.log("Cannot switch to the network")
+    //             // The network has not been added to MetaMask
+    //             if (switchError.code === 4902) {
+    //              console.log("Please add the Sepolia network to MetaMask")
+    //             }
+    //             console.log("Cannot switch to the network")
                 
-              }
-            }
-            else{
-              setCurrentAccount(accounts[0]);
-              getMemos();
-            }
+    //           }
+    //         }
+    //         else{
+    //           setCurrentAccount(accounts[0]);
+    //           getMemos();
+    //         }
     
             
-          }
+    //       }
     
         
-        } catch (error) {
-          console.log(error);
-        }
-      }
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //   }
       const buyCoffeeNow = async () => {
         try {
           const {ethereum} = window;
@@ -250,7 +251,7 @@ function BuyCoffee() {
       useEffect(() => {
         let buyMeACoffee;
         isWalletConnected();
-        // getMemos();
+        getMemos();
     
         // Create an event handler function for when someone sends
         // us a new memo.
@@ -353,7 +354,7 @@ function BuyCoffee() {
                         <Typography gutterBottom variant="h5" component="div">
                         Keep a developer awake... Buy a Coffee
                         </Typography>
-                        <Button variant="outlined" onClick={connectWallet}>Connect Wallet</Button>
+                        <Button variant="outlined" onClick={handleAuth}>Connect Wallet</Button>
               
                     </CardContent>
                 )}

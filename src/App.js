@@ -3,11 +3,11 @@ import './App.css';
 import Header from './components/header/Header';
 import BuyCoffee from './pages/BuyCoffee/BuyCoffee';
 import Staking from './pages/Staking/Staking';
-// import {WalletProvider} from './context/WalletContext'
+import {WalletProvider} from './context/WalletContext'
 
 function App() {
   return (
-  // <WalletProvider>
+  <WalletProvider>
     <div className="App">
 
       <Header/>
@@ -16,7 +16,7 @@ function App() {
 
  
     </div>
-  // </WalletProvider>
+  </WalletProvider>
   );
 }
 

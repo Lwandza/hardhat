@@ -1,4 +1,4 @@
-import  React, {  useEffect, useState } from 'react';
+import  React, {  useEffect, useState, useContext } from 'react';
 import { ethers } from "ethers";
 // const ethers = require("ethers")
 import abi from '../../contracts/contracts/Staking.sol/Staking.json'
@@ -24,21 +24,22 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';  
 import Input from '@mui/material/Input';
 import networkLogo from '../../assets/sepolia.png'
-
+import { WalletContext } from '../../context/WalletContext';
 function Staking() {
-    const contractAddress = "0xe05E50454a2eEc295A9bf05E94F3bE89Fb800418";
+    // const contractAddress = "0xe05E50454a2eEc295A9bf05E94F3bE89Fb800418";
     // const contractAddress = "0x3a116fCfCE582b89f48603aA631074Ee8212afA3";
-      //  const contractAddress = "0xA2630fcad6Cfa848E279d2C0E4C4cB3e0614DEb0";
+       const contractAddress = "0xA2630fcad6Cfa848E279d2C0E4C4cB3e0614DEb0";
     const contractABI = abi.abi;
-    const [currentAccount, setCurrentAccount] = useState("");
+    // const [currentAccount, setCurrentAccount] = useState("");
     const [lockPeriods, setLockPeriods] = useState([]);
     const [userStakes, setUserStakes] = useState([]);
-    const [userBalance, setUserBalance] = useState([]);
+    // const [userBalance, setUserBalance] = useState([]);
     const [expanded, setExpanded] = useState(false);
     const [amount, setAmount] = useState("");
     const [stakeHint, setStakeHint] = useState("Insert amount you would like to stake");
     const [stakePassedTest, setStakePassedTest] = useState(false);
     const [buttonPressable, setButtonPressable] = useState(true);
+    const {handleAuth,isWalletConnected,formattedAccount,currentAccount,userBalance}=useContext(WalletContext)
     const handleChange = (panel) => (event, isExpanded) => {
       setExpanded(isExpanded ? panel : false);
     };
@@ -73,9 +74,12 @@ function Staking() {
 
     useEffect(() => {
     
-      isWalletConnected();
+
+      if(currentAccount !=""){
+        getLockperiods(currentAccount)
+      }
     
-    }, []);
+    }, [currentAccount]);
 
     const changeDate = async() =>{
    
@@ -181,58 +185,58 @@ function Staking() {
       }
     }
 
-    const isWalletConnected = async () => {
-      try {
-          const { ethereum } = window;
+  //   const isWalletConnected = async () => {
+  //     try {
+  //         const { ethereum } = window;
 
-          const accounts = await ethereum.request({method: 'eth_accounts'})
-          console.log("accounts: ", accounts);
-          console.log('start check')
+  //         const accounts = await ethereum.request({method: 'eth_accounts'})
+  //         console.log("accounts: ", accounts);
+  //         console.log('start check')
 
-          if (accounts.length > 0) {
-              const account = accounts[0];
-              console.log("wallet is connected! Staking" + account);
-              let n = ethereum.chainId 
-              console.log("chainId: ", n)
-              if(n != "0xaa36a7"){
-                try {
+  //         if (accounts.length > 0) {
+  //             const account = accounts[0];
+  //             console.log("wallet is connected! Staking" + account);
+  //             let n = ethereum.chainId 
+  //             console.log("chainId: ", n)
+  //             if(n != "0xaa36a7"){
+  //               try {
     
-                  await ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: "0xaa36a7"}],
-                  });
-                  console.log("You have switched to the right network")
-                  setCurrentAccount(account);
+  //                 await ethereum.request({
+  //                   method: 'wallet_switchEthereumChain',
+  //                   params: [{ chainId: "0xaa36a7"}],
+  //                 });
+  //                 console.log("You have switched to the right network")
+  //                 setCurrentAccount(account);
                  
-                  getLockperiods(account)
-                  // getMemos();
+  //                 getLockperiods(account)
+  //                 // getMemos();
                   
-                } catch (switchError) {
+  //               } catch (switchError) {
                   
-                  // The network has not been added to MetaMask
-                  if (switchError.code === 4902) {
-                   console.log("Please add the Sepolia network to MetaMask")
-                  }
-                  console.log("Cannot switch to the network")
+  //                 // The network has not been added to MetaMask
+  //                 if (switchError.code === 4902) {
+  //                  console.log("Please add the Sepolia network to MetaMask")
+  //                 }
+  //                 console.log("Cannot switch to the network")
                   
-                }
-              }
-              else{
-                setCurrentAccount(account);
-                getLockperiods(account)
-                // getMemos();
-              }
-              // setCurrentAccount(account)
-              // getMemos();
-          } else {
-              console.log("make sure MetaMask is connected");
-          }
-      } catch (error) {
-          console.log("error: ", error);
-      }
+  //               }
+  //             }
+  //             else{
+  //               setCurrentAccount(account);
+  //               getLockperiods(account)
+  //               // getMemos();
+  //             }
+  //             // setCurrentAccount(account)
+  //             // getMemos();
+  //         } else {
+  //             console.log("make sure MetaMask is connected");
+  //         }
+  //     } catch (error) {
+  //         console.log("error: ", error);
+  //     }
 
       
-  }
+  // }
   const calcDaysRemaining = (unlockDate) => {
     const timeNow = Date.now() / 1000
     const secondsRemaining = unlockDate - timeNow
@@ -303,9 +307,9 @@ function Staking() {
 
         }
         setUserStakes(myStakes)
-        const balance= await provider.getBalance(account)
-        console.log("balance", parseFloat(balance/(Math.pow(10,18))))
-        setUserBalance(parseFloat(balance/(Math.pow(10,18))))
+        // const balance= await provider.getBalance(account)
+        // console.log("balance", parseFloat(balance/(Math.pow(10,18))))
+        // setUserBalance(parseFloat(balance/(Math.pow(10,18))))
       
         console.log("myStakes", myStakes)
       } else {
@@ -380,7 +384,7 @@ function Staking() {
                       <TableHead>
                         <TableRow>
                           <TableCell>Staked Amount</TableCell>
-                          <TableCell align="right">Interest You Will Earn</TableCell>
+                          <TableCell align="right">Interest Earned</TableCell>
                           <TableCell align="right">Days Remaining</TableCell>
                    
                           <TableCell align="right"></TableCell>

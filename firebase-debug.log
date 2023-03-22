@@ -1,0 +1,21 @@
+[debug] [2023-03-22T20:04:50.700Z] ----------------------------------------------------------------------
+[debug] [2023-03-22T20:04:50.702Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\lwand\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2023-03-22T20:04:50.702Z] CLI Version:   11.25.1
+[debug] [2023-03-22T20:04:50.703Z] Platform:      win32
+[debug] [2023-03-22T20:04:50.703Z] Node Version:  v18.15.0
+[debug] [2023-03-22T20:04:50.703Z] Time:          Wed Mar 22 2023 22:04:50 GMT+0200 (South Africa Standard Time)
+[debug] [2023-03-22T20:04:50.704Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-03-22T20:04:50.710Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-03-22T20:04:50.711Z] > authorizing via signed-in user (lwandza.nzalo@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\lwand\OneDrive\Desktop\Web3\Lwandza-Hardhat-Profile\frontend
+
